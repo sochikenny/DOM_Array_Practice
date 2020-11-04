@@ -19,13 +19,22 @@ async function getRandomUser() {
     
     const user = data.results[0];
 
-    const newUser ={
+    const newUser = {
         name: `${user.name.first} ${user.name.last}`,
         money: Math.floor(Math.random() * 1000000)
     };
 
     addData(newUser);
     // console.log(user)
+}
+
+// Double everyones money 
+function doubleMoney() {
+    data = data.map(user => {
+        return { ...user, money: user.money * 2 };
+    });
+
+    updateDOM();
 }
 
 //Add new object to data array
@@ -55,6 +64,7 @@ function formatMoney(number){
 
 //Event Listeners 
 addUserBtn.addEventListener('click', getRandomUser);
+doubleBtn.addEventListener('click', doubleMoney)
 
 
   
