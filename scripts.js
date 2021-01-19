@@ -5,7 +5,7 @@ const showMillionairesBtn = document.getElementById('show-millionaires');
 const sortBtn = document.getElementById('sort');
 const calculateWealthBtn = document.getElementById('calculate-wealth');
 
-
+//initialize empty array called data
 let data = [];
 
 getRandomUser();
@@ -13,58 +13,31 @@ getRandomUser();
 getRandomUser();
 
 // fetch random user and add money
+//async function that also uses await to help fetch and use data from third party API
 async function getRandomUser() {
     const res = await fetch('https://randomuser.me/api');
     const data = await res.json();
     
     const user = data.results[0];
+    //console.log(user)
 
+    //creating a new user object that consists of name and money
     const newUser = {
         name: `${user.name.first} ${user.name.last}`,
         money: Math.floor(Math.random() * 1000000)
     };
 
+    //This function takes in the newUser as an input
     addData(newUser);
-    // console.log(user)
-}
-
-// Double everyones money 
-function doubleMoney() {
-    data = data.map(user => {
-        return { ...user, money: user.money * 2 };
-    });
-
-    updateDOM();
-}
-
-//Sort users by richest
-function sortByRichest(){
-    data.sort((a, b) => b.money - a.money);
-
-    updateDOM();
-}
-
-// Filter only millionaires
-
-function showMillionaires(){
-    data = data.filter(folks => folks.money >= 1000000);
-
-    updateDOM();
-}
-
-//Calculate the total wealth
-function calculateWealth(){
-    const wealth = data.reduce((acc, user) => (acc += user.money), 0);
-
-    const wealthEl = document.createElement('div');
-    wealthEl.innerHTML = `<h3>Total Wealth: <strong> ${formatMoney(wealth)}</strong></h3>`;
-    main.appendChild(wealthEl);
 }
 
 //Add new object to data array
+//function that pushes object into initialized data array
 function addData(obj){
     data.push(obj);
 
+    //once the new user object in pushed onto the initialized data, we call the function below
+    //to now update the DOM
     updateDOM();
 }
 
@@ -85,6 +58,45 @@ function updateDOM(providedData = data){
 function formatMoney(number){
     return '$' + number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
+
+
+//Double everyones money using map method
+//Basically you are updating the already initialized data with users doubling their money
+function doubleMoney() {
+    data = data.map(user => {
+        return { ...user, money: user.money * 2 };
+    });
+
+    updateDOM();
+}
+
+
+//Sort users by richest using sort method
+//You are just sorting through the already initialized data. You aren't really updating anything
+function sortByRichest(){
+    data.sort((a, b) => b.money - a.money);
+
+    updateDOM();
+}
+
+
+// Filter only millionaires using filter method
+//Basically you are updating the already initialized data with showing only the users that are millionaires
+function showMillionaires(){
+    data = data.filter(folks => folks.money >= 1000000);
+
+    updateDOM();
+}
+
+//Calculate the total wealth using reduce method
+function calculateWealth(){
+    const wealth = data.reduce((acc, user) => (acc += user.money), 0);
+
+    const wealthEl = document.createElement('div');
+    wealthEl.innerHTML = `<h3>Total Wealth: <strong> ${formatMoney(wealth)}</strong></h3>`;
+    main.appendChild(wealthEl);
+}
+
 
 //Event Listeners 
 addUserBtn.addEventListener('click', getRandomUser);
